@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Informatika kvíz – 3. osztály</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:#17324f;background:#edf6ff;font-size:18px}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at top left,#d7f8ed,transparent 40%),radial-gradient(circle at bottom right,#dce6ff,transparent 40%),#edf6ff}main{max-width:820px;margin:0 auto;padding:36px 18px 70px}.sheet{background:#fff;box-shadow:0 16px 50px #28446d1c;border:1px solid #d7e6f5;border-radius:26px;padding:clamp(20px,5vw,42px)}.eyebrow{color:#3566ab;font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:.78rem}h1{font-size:clamp(1.65rem,5vw,2.4rem);line-height:1.15;margin:8px 0 14px}h2{font-size:clamp(1.3rem,3.8vw,1.65rem);line-height:1.35}p{line-height:1.55}.intro{color:#516981}.topline{display:flex;align-items:center;justify-content:space-between;gap:16px;font-weight:700;color:#49637c;margin-bottom:12px}.progress{height:12px;background:#e6eef9;border-radius:30px;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,#21ad9e,#4585e9);transition:width .2s}.choices{display:grid;gap:12px;margin-top:22px}.choice{display:flex;gap:14px;align-items:center;text-align:left;border-radius:16px;background:white;border:2px solid #dbe7f5;padding:14px 16px;color:inherit;cursor:pointer;min-height:68px;font:inherit;font-weight:650;transition:background .12s,border-color .12s}.choice:hover:not(:disabled),.choice:focus-visible{background:#f1f7ff;border-color:#4f84dc;outline:3px solid #a9ceff;outline-offset:1px}.choice:disabled{cursor:default}.letter{background:#ebf3ff;border-radius:12px;display:grid;place-items:center;min-width:38px;height:38px;color:#3465a0;font-size:.95rem}.choice.correct{border-color:#28a676;background:#effbf4}.choice.wrong{border-color:#dd6464;background:#fff2f1}.feedback{margin-top:20px;padding:16px 18px;border-radius:16px;background:#f1f6fc;border-left:5px solid #4885d4}.feedback strong{display:block;margin-bottom:5px}.actions{margin-top:22px;display:flex;gap:10px;flex-wrap:wrap}.primary{background:#2869d1;color:#fff;border:0;border-radius:13px;padding:14px 21px;font:inherit;font-weight:800;cursor:pointer;min-height:52px}.primary:hover,.primary:focus-visible{background:#1553b3;outline:3px solid #9cc4ff}.primary:disabled{opacity:.45;cursor:not-allowed}.small{font-size:.87rem;color:#557087}#quiz,#results{display:none}.score{font-size:3.8rem;font-weight:850;color:#2361c6;margin:6px 0}.center{text-align:center}.award{font-size:3rem;margin:18px 0 0}footer{text-align:center;color:#617a93;font-size:.82rem;margin-top:20px} [hidden]{display:none!important}@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<div class="sheet">
+<section id="welcome">
+<div class="eyebrow">💻 Játékos tudáspróba</div>
+<h1>Informatika kvíz – 3. osztály</h1>
+<p class="intro">Mennyit tudsz a számítógépről? Válaszolj 15 kérdésre a számítógép részeiről, az egérről, a billentyűkről és az asztalról!</p>
+<p>✅ Minden helyes válasz 1 pontot ér.<br>💡 Minden kérdés után magyarázatot kapsz.<br>🏆 A végén meglátod az eredményedet.</p>
+<div class="actions"><button class="primary" id="start">Indulhat a kvíz! →</button></div>
+</section>
+<section id="quiz" aria-labelledby="question">
+<div class="topline"><span id="counter"></span><span id="scorelive"></span></div>
+<div class="progress" role="progressbar" aria-label="Kvíz előrehaladása" aria-valuemin="0" aria-valuemax="15" aria-valuenow="0" id="progress"><div class="fill" id="fill"></div></div>
+<h2 id="question" tabindex="-1"></h2>
+<p class="small" id="hint">Válaszd ki az egyetlen helyes választ!</p>
+<div class="choices" id="choices" role="group" aria-labelledby="question"></div>
+<div id="feedback" class="feedback" role="status" aria-live="polite" hidden></div>
+<div class="actions"><button class="primary" id="next" hidden>Következő kérdés →</button></div>
+</section>
+<section id="results" class="center" aria-live="polite">
+<div class="award" aria-hidden="true">🏆</div>
+<h1>Gratulálunk, végigértél!</h1>
+<p>Ennyi helyes választ adtál:</p>
+<div class="score" id="finalscore"></div>
+<h2 id="resulttitle"></h2><p id="resultmsg"></p>
+<div class="actions" style="justify-content:center"><button class="primary" id="restart">Újra próbálom ↻</button></div>
+</section>
+</div>
+<footer>Informatika · 3. osztály · A kvíz internetkapcsolat nélkül is működik, és nem gyűjt személyes adatokat.</footer>
+</main>
+<script>
+'use strict';
+const questions=[
+{q:'Melyik eszközön látjuk a képeket, szövegeket és programokat?',opts:['Billentyűzet','Monitor','Egér'],a:1,why:'A monitor képernyőjén jelennek meg a képek, szövegek és programok.'},
+{q:'Melyik eszközzel tudunk betűket és számokat beírni?',opts:['Billentyűzet','Gépház','Monitor'],a:0,why:'A billentyűzet gombjaival írhatunk betűket, számokat és más jeleket.'},
+{q:'Melyik eszközzel mozgatjuk a képernyőn az egérmutatót?',opts:['Monitor','Gépház','Egér'],a:2,why:'Az egér mozgatásával irányítjuk a képernyőn az egérmutatót.'},
+{q:'Melyik részben található a számítógép legtöbb fontos belső alkatrésze?',opts:['Egér','Gépház','Billentyűzet'],a:1,why:'A gépházban található például a processzor és a memória.'},
+{q:'Mire használjuk leggyakrabban az egér bal gombját?',opts:['Kijelölésre és kattintásra','A monitor bekapcsolására','Betűk írására'],a:0,why:'A bal egérgombbal kattinthatunk és kijelölhetünk dolgokat.'},
+{q:'Mi történik általában, ha az egér jobb gombjával kattintunk?',opts:['Kikapcsol a gép','Eltűnik az asztal','Megjelenik egy menü'],a:2,why:'A jobb kattintás gyakran egy lehetőségeket tartalmazó menüt nyit meg.'},
+{q:'Mire való az egéren található görgő?',opts:['Hangfelvételre','Az oldal görgetésére','Nagybetűk írására'],a:1,why:'A görgővel például feljebb és lejjebb mozoghatunk egy hosszú oldalon.'},
+{q:'Mire használjuk az Enter billentyűt?',opts:['Csak a számítógép kikapcsolására','Az egér mozgatására','Új sor kezdésére vagy egy parancs jóváhagyására'],a:2,why:'Az Enterrel szövegíráskor új sort kezdhetünk, illetve jóváhagyhatunk egy műveletet.'},
+{q:'Hogyan írhatunk egy nagybetűt a Shift billentyű segítségével?',opts:['Lenyomva tartjuk a Shiftet, és megnyomjuk a betűt','Csak a szóközt nyomjuk meg','Kétszer megnyomjuk az egeret'],a:0,why:'A Shift lenyomva tartása közben egy betűbillentyűt megnyomva nagybetűt írhatunk.'},
+{q:'Melyik billentyűvel hagyunk üres helyet két szó között?',opts:['Enter','Szóköz','Backspace'],a:1,why:'A hosszú szóközbillentyűvel választjuk el egymástól a szavakat.'},
+{q:'Mit csinál a Backspace billentyű szövegírás közben?',opts:['Új ablakot nyit','Nagybetűt ír','Törli a kurzortól balra lévő karaktert'],a:2,why:'A Backspace a szövegkurzor előtti karaktert törli.'},
+{q:'Mi a számítógép asztala?',opts:['A képernyő egyik fő munkaterülete','Az asztal, amelyre a monitort tesszük','A billentyűzet egyik gombja'],a:0,why:'A számítógép asztalán ikonokat, fájlokat és parancsikonokat láthatunk.'},
+{q:'Mi az ikon a számítógép asztalán?',opts:['Egy egérgomb','Egy kis kép, amely például programot vagy fájlt jelöl','A számítógép hangszórója'],a:1,why:'Az ikon egy kis kép, amely például egy programot, fájlt vagy mappát jelképez.'},
+{q:'Hogyan végzünk dupla kattintást?',opts:['Egyszer megnyomjuk a jobb gombot','Megforgatjuk az egér görgőjét','Kétszer gyorsan megnyomjuk a bal egérgombot'],a:2,why:'A dupla kattintás két gyors, egymás utáni bal kattintás. Gyakran ezzel nyitunk meg programokat és mappákat.'},
+{q:'Hogyan húzhatunk át egy ikont az asztalon egy másik helyre?',opts:['Lenyomva tartjuk a bal egérgombot, mozgatjuk az egeret, majd elengedjük','Csak megnyomjuk az Entert','Megforgatjuk a görgőt'],a:0,why:'Húzáskor lenyomva tartjuk az egér bal gombját, mozgatjuk az egeret, majd a megfelelő helyen elengedjük.'}
+];
+let index=0,score=0,answered=false;
+const el=id=>document.getElementById(id);
+function show(id){['welcome','quiz','results'].forEach(section=>el(section).style.display=section===id?'block':'none')}
+function render(){answered=false;const item=questions[index];el('counter').textContent=`${index+1}. kérdés / ${questions.length}`;el('scorelive').textContent=`⭐ ${score} pont`;el('fill').style.width=`${(index+1)/questions.length*100}%`;el('progress').setAttribute('aria-valuenow',index+1);el('question').textContent=item.q;el('choices').replaceChildren();el('feedback').hidden=true;el('next').hidden=true;
+item.opts.forEach((option,i)=>{const button=document.createElement('button');button.type='button';button.className='choice';const letter=document.createElement('span');letter.className='letter';letter.textContent='ABC'[i];const label=document.createElement('span');label.textContent=option;button.append(letter,label);button.addEventListener('click',()=>answer(i));el('choices').append(button)});el('question').focus()}
+function answer(selected){if(answered)return;answered=true;const item=questions[index];if(selected===item.a)score++;el('scorelive').textContent=`⭐ ${score} pont`;Array.from(el('choices').children).forEach((btn,i)=>{btn.disabled=true;if(i===item.a)btn.classList.add('correct');else if(i===selected)btn.classList.add('wrong')});const feedback=el('feedback');feedback.replaceChildren();const strong=document.createElement('strong');strong.textContent=selected===item.a?'✅ Ügyes vagy! Helyes válasz!':'💡 Most nem sikerült, de semmi baj!';const explanation=document.createElement('span');explanation.textContent=item.why;feedback.append(strong,explanation);feedback.hidden=false;el('next').textContent=index===questions.length-1?'Eredményem megtekintése →':'Következő kérdés →';el('next').hidden=false;el('next').focus()}
+function finish(){show('results');el('finalscore').textContent=`${score} / ${questions.length}`;const msg=score===15?['Tökéletes teljesítmény! 🌟','Minden kérdésre helyesen válaszoltál. Igazi számítógép-szakértő vagy!']:score>=12?['Nagyon ügyes vagy! 🌟','Szinte mindent tudsz a számítógépről!']:score>=8?['Szép munka! 👏','Sok mindent megtanultál. Ismételd át, amiben bizonytalan voltál!']:['Gyakorlással még ügyesebb leszel! 💪','Olvasd át újra a tanultakat, és próbáld meg ismét a kvízt!'];el('resulttitle').textContent=msg[0];el('resultmsg').textContent=msg[1];el('restart').focus()}
+function start(){index=0;score=0;show('quiz');render()}
+el('start').addEventListener('click',start);el('restart').addEventListener('click',start);el('next').addEventListener('click',()=>{if(!answered)return;if(index===questions.length-1)finish();else{index++;render()}});
+</script>
+</body>
+</html>
